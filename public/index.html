@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Good Morning Dishu 💖</title>
+  <meta name="description" content="A special good morning surprise just for you, Dishu 💖" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Dancing+Script:wght@400;700&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Particle Canvas Background -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Floating Emojis Layer -->
+  <div id="floatingLayer" class="floating-layer"></div>
+
+  <!-- ===== GATE SCREEN ===== -->
+  <div id="gateScreen" class="gate-screen">
+    <div class="gate-bg-blur"></div>
+
+    <p class="tap-hint" id="tapHint">tap the heart to open your surprise 💌</p>
+
+    <div class="heart-wrapper" id="heartWrapper" onclick="openGate()">
+      <div class="heart-glow"></div>
+      <div class="heart-3d" id="heart3d">
+        <div class="heart-shape">
+          <div class="heart-inner">💗</div>
+        </div>
+      </div>
+      <div class="heartbeat-ring ring1"></div>
+      <div class="heartbeat-ring ring2"></div>
+      <div class="heartbeat-ring ring3"></div>
+    </div>
+
+    <p class="sub-hint">made with love, just for you 🍓</p>
+  </div>
+
+  <!-- ===== MESSAGE SCREEN ===== -->
+  <div id="msgScreen" class="msg-screen hidden">
+    <div class="stars-layer" id="starsLayer"></div>
+
+    <div class="msg-content">
+      <!-- 3D Text Block -->
+      <div class="morning-text-wrapper">
+        <div class="morning-label">✨ Good Morning ✨</div>
+
+        <div class="name-3d-wrapper">
+          <span class="name-3d" data-text="Dishu">Dishu</span>
+        </div>
+
+        <div class="taglines">
+          <div class="tagline t1">My Cutie Pie 🍰</div>
+          <div class="tagline t2">The Apple of My Eye 🍎</div>
+
+        </div>
+      </div>
+
+      <!-- Heart Beat Center Piece -->
+      <div class="center-heart">
+        <span class="big-heart">💖</span>
+        <div class="center-ring cr1"></div>
+        <div class="center-ring cr2"></div>
+      </div>
+
+      <div class="love-message">
+        <p>Every morning is beautiful</p>
+        <p>because it starts with you 🌅</p>
+        <p class="sub-love">Rise and shine, beautiful 💕</p>
+      </div>
+
+      <!-- Floating Fruit Row -->
+      <div class="fruit-row">
+        <span class="fruit-item">🍓</span>
+        <span class="fruit-item">💖</span>
+        <span class="fruit-item">🍓</span>
+        <span class="fruit-item">🌹</span>
+        <span class="fruit-item">🍓</span>
+        <span class="fruit-item">💗</span>
+        <span class="fruit-item">🍓</span>
+      </div>
+
+      <div class="bottom-msg">
+        <p>Sending you love from across the miles 💌</p>
+        <p class="signature">— Always yours 🥰</p>
+      </div>
+    </div>
+
+    <!-- Burst Hearts on Open -->
+    <div class="burst-container" id="burstContainer"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
