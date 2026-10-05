@@ -1,5 +1,5 @@
 /**
- * Cloudflare Worker — Good Morning Dishu 💖
+ * Cloudflare Worker — Level 0 — Night (memory tag)
  * Serves static assets from the /public directory
  */
 export default {
