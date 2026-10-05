@@ -1,0 +1,8 @@
+{
+  "outputDirectory": "public",
+  "installCommand": "echo skip",
+  "buildCommand": "echo skip",
+  "headers": [
+    { "source": "/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
+  ]
+}
