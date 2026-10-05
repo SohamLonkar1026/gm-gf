@@ -2,9 +2,10 @@
    app.js — Level 0: Night
    ============================================================ */
 
-/* Drop your own song at public/music.mp3 and it plays instead of
-   the generated fireside soundtrack. */
-const CUSTOM_MUSIC = 'music.mp3';
+/* The song: JVKE — her (feat. Annika Wells), played through the official
+   YouTube player. If YouTube can't load, a generated fireside soundtrack
+   plays instead. */
+const YT_ID = 'ZxE0QzE2K9o';
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -66,50 +67,80 @@ const embers = (() => {
 
 /* ---------- sound ---------- */
 const sound = (() => {
-  let mode = null;   // 'file' | 'synth'
-  let audio = null, synth = null, on = true, customOk = false;
+  let yt = null, ytReady = false, ytPlaying = false, ytBroken = false;
+  let synth = null, on = true, started = false, timer = null;
+  const nudge = $('#nudge');
+  const api = { onChange: () => {} };
 
-  // is there a custom track? (checked early so the tap can start it instantly)
-  fetch(CUSTOM_MUSIC, { method: 'HEAD' })
-    .then((r) => { customOk = r.ok && /audio|octet/.test(r.headers.get('content-type') || ''); })
-    .catch(() => {});
+  const setOn = (v) => { on = v; api.onChange(v); };
+  const showNudge = () => { if (started && !ytPlaying && !ytBroken) nudge.hidden = false; };
+  const hideNudge = () => { nudge.hidden = true; };
 
-  function startSynth() {
+  function tryPlay() {
+    try { yt.unMute(); yt.setVolume(90); yt.playVideo(); } catch (e) { /* not ready */ }
+  }
+
+  function ytFailed() {
+    if (ytBroken) return;
+    ytBroken = true; hideNudge();
+    $('#songCard').hidden = true;
+    // no YouTube → full generated soundtrack instead
+    if (synth) synth.add({ fire: false }); else if (started) startSynth(true);
+  }
+
+  function startSynth(full) {
     if (synth) return;
-    mode = 'synth';
-    synth = NightAudio.createPlayer();
+    synth = NightAudio.createPlayer(full ? {} : { music: false, level: 0.5 });
     if (synth) { synth.start(); synth.setOn(on); }
   }
 
-  function start() {
-    if (customOk) {
-      mode = 'file';
-      audio = new Audio(CUSTOM_MUSIC);
-      audio.loop = true; audio.volume = 0.0;
-      audio.addEventListener('error', () => { audio = null; startSynth(); });
-      const p = audio.play();
-      if (p && p.catch) p.catch(() => { audio = null; startSynth(); });
-      let v = 0; // fade in
-      const f = setInterval(() => {
-        if (!audio) return clearInterval(f);
-        v = Math.min(0.9, v + 0.05); audio.volume = on ? v : 0;
-        if (v >= 0.9) clearInterval(f);
-      }, 150);
-    } else startSynth();
-  }
+  // load the YouTube player early so the tap can start it instantly
+  window.onYouTubeIframeAPIReady = () => {
+    yt = new YT.Player('ytPlayer', {
+      videoId: YT_ID, width: '100%', height: '100%',
+      playerVars: { playsinline: 1, rel: 0, modestbranding: 1, loop: 1, playlist: YT_ID },
+      events: {
+        onReady: () => { ytReady = true; if (started && on) tryPlay(); },
+        onStateChange: (e) => {
+          const S = YT.PlayerState;
+          if (e.data === S.PLAYING) { ytPlaying = true; hideNudge(); if (!on) setOn(true); if (synth) synth.setOn(true); }
+          else if (e.data === S.PAUSED) { ytPlaying = false; if (on) { setOn(false); if (synth) synth.setOn(false); } }
+          else if (e.data === S.ENDED) { yt.seekTo(0); yt.playVideo(); }
+        },
+        onError: ytFailed,
+      },
+    });
+  };
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  tag.onerror = ytFailed;
+  document.head.appendChild(tag);
 
-  function toggle() {
-    on = !on;
-    if (mode === 'file' && audio) { on ? audio.play() : audio.pause(); }
-    else if (synth) synth.setOn(on);
+  api.start = () => {
+    started = true;
+    if (ytBroken) return startSynth(true);
+    startSynth(false);                 // quiet fire crackle under the song
+    if (ytReady) tryPlay();            // else onReady starts it
+    timer = setTimeout(() => {
+      if (ytPlaying) return;
+      if (!ytReady) ytFailed(); else showNudge();   // autoplay blocked → ask for one more tap
+    }, 3500);
+  };
+
+  api.toggle = () => {
+    setOn(!on);
+    if (yt && ytReady && !ytBroken) { on ? tryPlay() : yt.pauseVideo(); }
+    if (synth) synth.setOn(on);
     return on;
-  }
+  };
 
-  document.addEventListener('visibilitychange', () => {
-    if (mode === 'file' && audio) { document.hidden ? audio.pause() : on && audio.play(); }
+  nudge.addEventListener('click', () => {
+    if (yt && ytReady) tryPlay();
+    // if the browser still refuses, bring the visible player into view to tap play there
+    setTimeout(() => { if (!ytPlaying) $('#songCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 1200);
   });
 
-  return { start, toggle };
+  return api;
 })();
 
 /* ---------- gate: the tap that lights the fire (and the music) ---------- */
@@ -127,7 +158,7 @@ const sound = (() => {
 
     setTimeout(() => {
       gateEl.classList.add('leaving');
-      $('#story').hidden = false;
+      $('#story').classList.remove('pre');
       document.body.classList.remove('is-gated');
       scrollTo(0, 0);
       startReveals();
@@ -162,9 +193,9 @@ function startReveals() {
 })();
 
 /* ---------- sound button / replay ---------- */
-$('#soundBtn').addEventListener('click', (e) => {
-  e.currentTarget.setAttribute('aria-pressed', String(sound.toggle()));
-});
+const soundBtn = $('#soundBtn');
+sound.onChange = (v) => soundBtn.setAttribute('aria-pressed', String(v));
+soundBtn.addEventListener('click', () => sound.toggle());
 $('#again').addEventListener('click', () => scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }));
 
 /* ---------- lightbox ---------- */

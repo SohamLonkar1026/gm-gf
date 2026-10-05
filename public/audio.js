@@ -55,6 +55,8 @@
   function build(ctx, dest, opts) {
     opts = opts || {};
     const level = opts.level == null ? 0.85 : opts.level;
+    const music = opts.music !== false; // pads + plucks
+    const fire = opts.fire !== false;   // crackle + roar
     const t0 = ctx.currentTime;
     const rng = mulberry32(opts.seed || 20260101);
     const pan = (v) => {
@@ -112,7 +114,7 @@
     const roarLfoG = ctx.createGain(); roarLfoG.gain.value = 0.025;
     roarLfo.connect(roarLfoG); roarLfoG.connect(roarGain.gain);
     roar.connect(roarLP); roarLP.connect(roarGain); roarGain.connect(fireBus);
-    roar.start(t0); roarLfo.start(t0);
+    if (fire) { roar.start(t0); roarLfo.start(t0); }
 
     const crackleBuf = noiseBuffer(ctx, 3, false);
 
@@ -177,13 +179,13 @@
     let nextPop = t0 + 0.3;
 
     function scheduleUntil(limit) {
-      while (nextChord < limit) {
+      while (music && nextChord < limit) {
         const ch = CHORDS[chordIdx % CHORDS.length];
         ch.forEach((n, i) => padNote(nextChord + i * 0.15, midi(n), CHORD_LEN, 0.016));
         bassNote(nextChord, midi(BASS[chordIdx % BASS.length]), CHORD_LEN);
         chordIdx++; nextChord += CHORD_LEN;
       }
-      while (nextStep < limit) {
+      while (music && nextStep < limit) {
         const t = nextStep;
         if (t - t0 > PLUCK_START && rng() < 0.5) {
           const ch = CHORDS[Math.floor((t - t0) / CHORD_LEN) % CHORDS.length];
@@ -193,7 +195,7 @@
         }
         nextStep += STEP;
       }
-      while (nextPop < limit) {
+      while (fire && nextPop < limit) {
         const big = rng() < 0.08;
         pop(nextPop, big ? 0.16 + rng() * 0.1 : 0.03 + rng() * 0.07);
         if (rng() < 0.22) pop(nextPop + 0.02 + rng() * 0.05, 0.03 + rng() * 0.05); // clusters
@@ -205,22 +207,24 @@
   }
 
   /* ── live player: owns the AudioContext, mute toggle, lifecycle ── */
-  function createPlayer() {
+  function createPlayer(popts) {
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
     const ctx = new AC();
-    let engine = null, timer = null, on = true;
+    const engines = [];
+    let timer = null, on = true;
 
-    function tick() { engine.scheduleUntil(ctx.currentTime + 3); }
+    const tick = () => engines.forEach((e) => e.scheduleUntil(ctx.currentTime + 3));
+    const add = (o) => {
+      const e = build(ctx, ctx.destination, o);
+      engines.push(e); tick();
+      if (!on) setOn(false);
+      if (!timer) timer = setInterval(tick, 400);
+    };
 
     function start() {
       // must run inside a user gesture (iOS / Chrome autoplay policy)
-      const go = () => {
-        if (engine) return;
-        engine = build(ctx, ctx.destination);
-        tick();
-        timer = setInterval(tick, 400);
-      };
+      const go = () => { if (!engines.length) add(popts); };
       const r = ctx.resume();
       if (r && r.then) r.then(go).catch(go); else go();
       // iOS: unlock with a silent buffer inside the gesture
@@ -232,20 +236,21 @@
 
     function setOn(v) {
       on = v;
-      if (!engine) return;
       if (v && ctx.state !== 'running') ctx.resume();
-      const g = engine.master.gain, t = ctx.currentTime;
-      g.cancelScheduledValues(t);
-      g.setValueAtTime(g.value, t);
-      g.linearRampToValueAtTime(v ? engine.level : 0, t + 0.6);
+      engines.forEach((e) => {
+        const g = e.master.gain, t = ctx.currentTime;
+        g.cancelScheduledValues(t);
+        g.setValueAtTime(g.value, t);
+        g.linearRampToValueAtTime(v ? e.level : 0, t + 0.6);
+      });
     }
 
     document.addEventListener('visibilitychange', () => {
-      if (!engine) return;
+      if (!engines.length) return;
       if (document.hidden) ctx.suspend(); else if (on) ctx.resume();
     });
 
-    return { ctx, start, setOn, isOn: () => on, isRunning: () => ctx.state === 'running' };
+    return { ctx, start, setOn, add, isOn: () => on, isRunning: () => ctx.state === 'running' };
   }
 
   window.NightAudio = { build, createPlayer };

@@ -141,6 +141,19 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @keyframes eq { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
 .sound[aria-pressed="false"] .bars i { animation: none; transform: scaleY(0.2); background: var(--muted); }
 
+/* gated: story is rendered (so the player can load) but invisible */
+.story.pre { position: fixed; inset: 0; overflow: hidden; opacity: 0; pointer-events: none; z-index: 0; }
+
+/* the song */
+.player { position: relative; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid var(--line); box-shadow: 0 0 50px -18px rgba(255, 122, 47, 0.4); }
+.player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.song-title { margin-top: 0.9rem; color: var(--muted); font-size: 0.64rem; }
+.nudge {
+  position: fixed; left: 50%; bottom: max(1.2rem, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 45;
+  padding: 0.95rem 1.4rem; border-radius: 999px; background: var(--ember); color: var(--bg); font-weight: 700;
+  box-shadow: 0 8px 30px rgba(255, 122, 47, 0.45); animation: pulse 1.8s ease-in-out infinite; white-space: nowrap;
+}
+
 /* hero */
 .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; }
 .hero-bg {

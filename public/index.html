@@ -44,7 +44,7 @@
   </section>
 
   <!-- ============ STORY ============ -->
-  <main id="story" class="story" hidden>
+  <main id="story" class="story pre">
 
     <button id="soundBtn" class="sound" aria-label="Toggle music" aria-pressed="true">
       <span class="bars"><i></i><i></i><i></i><i></i></span>
@@ -157,6 +157,13 @@
       </p>
     </section>
 
+    <!-- THE SONG -->
+    <section class="block song" id="songCard">
+      <p class="mono ch-num reveal">now playing · on repeat</p>
+      <div class="player reveal d1"><div id="ytPlayer"></div></div>
+      <p class="mono song-title reveal d2">JVKE — her (feat. Annika Wells)</p>
+    </section>
+
     <!-- GALLERY -->
     <section class="block gallery-block">
       <p class="mono ch-num reveal">saved frames</p>
@@ -186,6 +193,8 @@
       <p class="mono signoff reveal d3">saved on a hilltop · kept for you</p>
     </section>
   </main>
+
+  <button id="nudge" class="nudge mono" hidden>▶ tap to start the song</button>
 
   <!-- LIGHTBOX -->
   <div id="lightbox" class="lightbox" hidden>
