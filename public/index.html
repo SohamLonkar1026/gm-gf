@@ -2,97 +2,209 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Good Morning Minu 💖</title>
-  <meta name="description" content="A special good morning surprise just for you, Minu 💖" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Level 0 — Night</title>
+  <meta name="description" content="A memory, saved. Level 0: Night — born from fire, coffee and barbecue." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0a0705" />
+  <meta property="og:url" content="https://coffeewith.sohamlonkar.com/" />
+  <meta property="og:title" content="Level 0 — Night" />
+  <meta property="og:description" content="Born from fire, coffee & barbecue." />
+  <meta property="og:image" content="photos/city-lights.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Dancing+Script:wght@400;700&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🔥%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="is-gated">
 
-  <!-- Particle Canvas Background -->
-  <canvas id="bgCanvas"></canvas>
+  <canvas id="embers" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
 
-  <!-- Floating Emojis Layer -->
-  <div id="floatingLayer" class="floating-layer"></div>
+  <!-- ============ GATE: tapping this is what starts the music ============ -->
+  <section id="gate" class="gate">
+    <p class="mono gate-tag">memory tag · 001</p>
 
-  <!-- ===== GATE SCREEN ===== -->
-  <div id="gateScreen" class="gate-screen">
-    <div class="gate-bg-blur"></div>
+    <h1 class="gate-title">
+      <span class="mono gate-level">Level 0</span>
+      <span class="gate-night">Night</span>
+    </h1>
 
-    <p class="tap-hint" id="tapHint">tap the heart to open your surprise 💌</p>
+    <button id="lightBtn" class="fire" aria-label="Light the fire and open the memory">
+      <span class="fire-glow"></span>
+      <span class="logs"></span>
+      <span class="flame f1"></span>
+      <span class="flame f2"></span>
+      <span class="flame f3"></span>
+      <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
+    </button>
 
-    <div class="heart-wrapper" id="heartWrapper" onclick="openGate()">
-      <div class="heart-glow"></div>
-      <div class="heart-3d" id="heart3d">
-        <div class="heart-shape">
-          <div class="heart-inner">💗</div>
-        </div>
+    <p class="mono gate-hint">tap the fire to open <span class="dot">·</span> sound on</p>
+  </section>
+
+  <!-- ============ STORY ============ -->
+  <main id="story" class="story pre">
+
+    <button id="soundBtn" class="sound" aria-label="Toggle music" aria-pressed="true">
+      <span class="bars"><i></i><i></i><i></i><i></i></span>
+    </button>
+
+    <!-- HERO -->
+    <header class="hero">
+      <img class="hero-bg" src="photos/city-lights.jpg" width="1100" height="825" alt="" />
+      <div class="hero-shade"></div>
+      <div class="hero-copy">
+        <p class="mono kicker reveal">Level 0</p>
+        <h2 class="hero-title reveal d1">Night</h2>
+        <p class="hero-sub reveal d2">Born from fire, coffee &amp; barbecue.</p>
       </div>
-      <div class="heartbeat-ring ring1"></div>
-      <div class="heartbeat-ring ring2"></div>
-      <div class="heartbeat-ring ring3"></div>
-    </div>
+      <div class="scroll-cue mono reveal d3"><span>scroll</span><i></i></div>
+    </header>
 
-    <p class="sub-hint">made with love, just for you 🍓</p>
+    <!-- QUEST LOG -->
+    <section class="block">
+      <div class="hud reveal">
+        <div class="hud-head mono">
+          <span>QUEST LOG</span><span>LEVEL 0 / NIGHT</span>
+        </div>
+        <ul class="quests">
+          <li class="ok"><b class="mono">✓</b><span>Fire</span><em>lit</em></li>
+          <li class="ok"><b class="mono">✓</b><span>Coffee</span><em>brewed</em></li>
+          <li class="ok"><b class="mono">✓</b><span>Barbecue</span><em>planned</em></li>
+          <li class="bad"><b class="mono">✗</b><span>Paneer</span><em>forgot it</em></li>
+          <li class="ok"><b class="mono">✓</b><span>Consciousness talk</span><em>unlocked</em></li>
+          <li class="zero"><b class="mono">0</b><span>Food eaten</span><em>none. at all.</em></li>
+        </ul>
+        <p class="hud-foot mono">result: still the best night</p>
+      </div>
+    </section>
+
+    <!-- 01 THE HILL -->
+    <section class="block chapter">
+      <p class="mono ch-num reveal">01 — the hill</p>
+      <h3 class="ch-title reveal d1">The whole city, switched on.</h3>
+      <figure class="photo wide reveal d2">
+        <img src="photos/hill-lookback.jpg" width="1100" height="825" loading="lazy" alt="Looking back over her shoulder on the hill at night, city lights behind" />
+        <figcaption class="mono">the hill, after dark</figcaption>
+      </figure>
+      <p class="prose reveal">
+        The sky hung low and heavy, the city glittered below, and for a while the
+        world felt like it had stopped just for this hill.
+      </p>
+    </section>
+
+    <!-- 02 FIRE & COFFEE -->
+    <section class="block chapter warm">
+      <p class="mono ch-num reveal">02 — fire &amp; coffee</p>
+      <h3 class="ch-title reveal d1">Built a fire. Brewed the coffee.</h3>
+      <div class="duo">
+        <figure class="photo reveal d2">
+          <img src="photos/fire-coffee.jpg" width="1100" height="825" loading="lazy" alt="Sipping coffee, face lit orange by the fire" />
+          <figcaption class="mono">firelight &amp; first sip</figcaption>
+        </figure>
+        <figure class="photo reveal d3">
+          <img src="photos/blanket-fire.jpg" width="1100" height="825" loading="lazy" alt="Sitting cross-legged on a blanket beside the fire and the tiny stove" />
+          <figcaption class="mono">base camp</figcaption>
+        </figure>
+      </div>
+      <p class="prose reveal">
+        A tiny stove, a blanket on the ground, a cup that looked far cooler than
+        coffee deserves. Barbecue was the plan. Fire was the headline.
+      </p>
+    </section>
+
+    <!-- 03 PANEER -->
+    <section class="block chapter">
+      <p class="mono ch-num reveal">03 — the paneer incident</p>
+      <h3 class="ch-title reveal d1">Mission: barbecue.<br /><s>Status: success.</s> <span class="fail">Status: no paneer.</span></h3>
+
+      <div class="report reveal d2">
+        <div><span class="mono">cause</span><p>one (1) forgotten paneer</p></div>
+        <div><span class="mono">damage</span><p>zero food. nobody ate anything.</p></div>
+        <div><span class="mono">morale</span><p>untouched</p></div>
+      </div>
+
+      <figure class="photo wide reveal d2">
+        <img src="photos/cup-smile.jpg" width="1100" height="825" loading="lazy" alt="Smiling at the camera with a cup in hand, fire behind" />
+        <figcaption class="mono">best restaurant I never ate at</figcaption>
+      </figure>
+      <p class="prose reveal">
+        The grill sat there with nothing to grill. We had fire, we had coffee,
+        and somehow that was a full meal.
+      </p>
+    </section>
+
+    <!-- 04 CONSCIOUSNESS -->
+    <section class="block chapter deep">
+      <p class="mono ch-num reveal">04 — the deep end</p>
+      <h3 class="ch-title reveal d1">Then I got talking about consciousness.</h3>
+      <figure class="photo wide reveal d2">
+        <img src="photos/profile-city.jpg" width="1100" height="825" loading="lazy" alt="Chin on hand, looking out over the city lights" />
+        <figcaption class="mono">somewhere between thoughts</figcaption>
+      </figure>
+      <blockquote class="quote reveal">
+        What does it mean to be aware of this moment <em>while it's happening?</em>
+      </blockquote>
+      <p class="prose reveal">
+        Somewhere between the fire and the city lights I started on the big
+        questions: awareness, what's really watching through our eyes, why
+        any of this feels like anything at all.
+      </p>
+      <p class="prose reveal">
+        Funny thing is, that night answered it a little. Fire on one side,
+        a whole city on the other, and me completely, stupidly awake to it.
+      </p>
+    </section>
+
+    <!-- THE SONG -->
+    <section class="block song" id="songCard">
+      <p class="mono ch-num reveal">now playing · on repeat</p>
+      <div class="player reveal d1"><div id="ytPlayer"></div></div>
+      <p class="mono song-title reveal d2">JVKE — her (feat. Annika Wells)</p>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="block gallery-block">
+      <p class="mono ch-num reveal">saved frames</p>
+      <div class="gallery reveal d1" id="gallery">
+        <button data-i="0"><img src="photos/hill-lookback.jpg" width="1100" height="825" loading="lazy" alt="Hill, looking back" /></button>
+        <button data-i="1"><img src="photos/profile-city.jpg" width="1100" height="825" loading="lazy" alt="Profile with city lights" /></button>
+        <button data-i="2"><img src="photos/over-shoulder.jpg" width="1100" height="825" loading="lazy" alt="Over the shoulder smile" /></button>
+        <button data-i="3"><img src="photos/city-lights.jpg" width="1100" height="825" loading="lazy" alt="City lights from the hill" /></button>
+        <button data-i="4"><img src="photos/fire-coffee.jpg" width="1100" height="825" loading="lazy" alt="Coffee by the fire" /></button>
+        <button data-i="5"><img src="photos/blanket-fire.jpg" width="1100" height="825" loading="lazy" alt="Blanket by the fire" /></button>
+        <button data-i="6"><img src="photos/cup-smile.jpg" width="1100" height="825" loading="lazy" alt="Smile with the cup" /></button>
+      </div>
+    </section>
+
+    <!-- FINALE -->
+    <section class="block finale">
+      <figure class="photo wide reveal">
+        <img src="photos/over-shoulder.jpg" width="1100" height="825" loading="lazy" alt="Glancing back with a smile, hair catching the firelight" />
+      </figure>
+      <p class="mono ch-num reveal">level 0 complete</p>
+      <h3 class="finale-title reveal d1">Level 1 is loading…</h3>
+      <p class="prose reveal d2">
+        Requirements: one hill, one fire, one very good coffee, and
+        <strong>paneer, actually packed this time.</strong>
+      </p>
+      <button id="again" class="btn reveal d3">relight the fire ↑</button>
+      <p class="mono signoff reveal d3">saved on a hilltop · kept for you</p>
+    </section>
+  </main>
+
+  <button id="nudge" class="nudge mono" hidden>▶ tap to start the song</button>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox" hidden>
+    <button class="lb-close" aria-label="Close">×</button>
+    <button class="lb-nav prev" aria-label="Previous">‹</button>
+    <img id="lbImg" alt="" />
+    <button class="lb-nav next" aria-label="Next">›</button>
   </div>
 
-  <!-- ===== MESSAGE SCREEN ===== -->
-  <div id="msgScreen" class="msg-screen hidden">
-    <div class="stars-layer" id="starsLayer"></div>
-
-    <div class="msg-content">
-      <!-- 3D Text Block -->
-      <div class="morning-text-wrapper">
-        <div class="morning-label">✨ Good Morning ✨</div>
-
-        <div class="name-3d-wrapper">
-          <span class="name-3d" data-text="Minu">Minu</span>
-        </div>
-
-        <div class="taglines">
-          <div class="tagline t1">My Cutie Pie 🍰</div>
-          <div class="tagline t2">The Apple of My Eye 🍎</div>
-
-        </div>
-      </div>
-
-      <!-- Heart Beat Center Piece -->
-      <div class="center-heart">
-        <span class="big-heart">💖</span>
-        <div class="center-ring cr1"></div>
-        <div class="center-ring cr2"></div>
-      </div>
-
-      <div class="love-message">
-        <p>Every morning is beautiful</p>
-        <p>because it starts with you 🌅</p>
-        <p class="sub-love">Rise and shine, beautiful 💕</p>
-      </div>
-
-      <!-- Floating Fruit Row -->
-      <div class="fruit-row">
-        <span class="fruit-item">🍓</span>
-        <span class="fruit-item">💖</span>
-        <span class="fruit-item">🍓</span>
-        <span class="fruit-item">🌹</span>
-        <span class="fruit-item">🍓</span>
-        <span class="fruit-item">💗</span>
-        <span class="fruit-item">🍓</span>
-      </div>
-
-      <div class="bottom-msg">
-        <p>Sending you love from across the miles 💌</p>
-        <p class="signature">— Always yours 🥰</p>
-      </div>
-    </div>
-
-    <!-- Burst Hearts on Open -->
-    <div class="burst-container" id="burstContainer"></div>
-  </div>
-
+  <script src="audio.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
